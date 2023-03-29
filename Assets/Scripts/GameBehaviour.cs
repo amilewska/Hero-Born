@@ -1,10 +1,23 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using TMPro;
+using UnityEngine.UI;
 
 public class GameBehaviour : MonoBehaviour
 {
-    
+    public Button winButton;
+
+    private int maxItems = 1;
+    [SerializeField] private TMP_Text healthText;
+    [SerializeField] private TMP_Text itemText;
+    [SerializeField] private TMP_Text progressText;
+
+    private void Start()
+    {
+        itemText.text += itemsCollected;
+        healthText.text += playerHP;
+    }
 
 
     private int itemsCollected = 0;
@@ -16,7 +29,17 @@ public class GameBehaviour : MonoBehaviour
         set 
         { 
             itemsCollected = value;
-            Debug.LogFormat("Items: {0}", itemsCollected);
+            itemText.text = "Items Colected: " + items;
+
+            if(itemsCollected >= maxItems)
+            {
+                progressText.text = "You've found all the items!";
+                winButton.gameObject.SetActive(true);
+            }
+            else
+            {
+                progressText.text = "Item found, only " + (maxItems - itemsCollected) + " more!";
+            }
         }
     
     }
@@ -28,6 +51,7 @@ public class GameBehaviour : MonoBehaviour
         set 
         { 
             playerHP = value;
+            healthText.text = "Player health: " + HP;
             Debug.LogFormat("Lives: {0}", playerHP);
         }
     }
