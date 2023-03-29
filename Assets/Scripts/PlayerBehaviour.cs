@@ -24,11 +24,13 @@ public class PlayerBehaviour : MonoBehaviour
     [SerializeField] float distanceToGround = 0.1f;
     [SerializeField] private LayerMask groundLayer;
     private CapsuleCollider col;
+    private GameBehaviour gameManager;
 
     private void Start()
     {
         rb = GetComponent<Rigidbody>();
         col = GetComponent<CapsuleCollider>();
+        gameManager = GameObject.Find("GameManager").GetComponent<GameBehaviour>();
     }
 
     private void Update()
@@ -72,6 +74,14 @@ public class PlayerBehaviour : MonoBehaviour
 
         isShooting = false;
 
+    }
+
+    private void OnCollisionEnter(Collision collision)
+    {
+        if(collision.gameObject.name == "Enemy")
+        {
+            gameManager.HP -= 1;
+        }
     }
 
     private bool IsGrounded()
