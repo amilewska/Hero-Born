@@ -4,6 +4,12 @@ using UnityEngine;
 
 public class PlayerBehaviour : MonoBehaviour
 {
+    [SerializeField] private GameObject bulletPrefab;
+    [SerializeField] private float bulletSpeed = 100f;
+    private bool isShooting;
+    private Vector3 bulletOffset = new Vector3(0, 0, 1);
+
+
     [SerializeField]private float moveSpeed = 10f;
     [SerializeField]private float rotateSpeed = 75f;
 
@@ -34,6 +40,7 @@ public class PlayerBehaviour : MonoBehaviour
         transform.Rotate(Vector3.up * horizontalInput * Time.deltaTime);*/
 
         isJumping |= Input.GetKeyDown(KeyCode.Space);
+        isShooting |= Input.GetKeyDown(KeyCode.Mouse0);
 
 
     }
@@ -54,6 +61,16 @@ public class PlayerBehaviour : MonoBehaviour
         }
 
         isJumping = false;
+
+        if (isShooting)
+        {
+            GameObject newBullet = Instantiate(bulletPrefab, this.transform.position + transform.forward, this.transform.rotation);
+
+            Rigidbody bulletRb = newBullet.GetComponent<Rigidbody>();
+            bulletRb.velocity = this.transform.forward * bulletSpeed;
+        }
+
+        isShooting = false;
 
     }
 
