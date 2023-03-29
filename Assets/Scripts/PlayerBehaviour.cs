@@ -46,11 +46,14 @@ public class PlayerBehaviour : MonoBehaviour
         rb.MovePosition(transform.position + transform.forward * verticalInput * Time.fixedDeltaTime);
         rb.MoveRotation(rb.rotation * angleRotation);
 
-        if(IsGrounded() && isJumping)
+        
+
+        if (IsGrounded() && isJumping)
         {
             rb.AddForce(Vector3.up * jumpVelocity, ForceMode.Impulse);
         }
 
+        isJumping = false;
 
     }
 
