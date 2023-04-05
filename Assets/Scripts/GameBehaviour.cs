@@ -4,9 +4,12 @@ using UnityEngine;
 using TMPro;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
+using CustomExtension;
 
-public class GameBehaviour : MonoBehaviour
+public class GameBehaviour : MonoBehaviour, IManager
 {
+    public Stack<Loot> LootStack = new Stack<Loot>();
+
     public Button lossButton;
     public Button winButton;
 
@@ -15,12 +18,47 @@ public class GameBehaviour : MonoBehaviour
     [SerializeField] private TMP_Text itemText;
     [SerializeField] private TMP_Text progressText;
 
+    private string state;
+    public string State 
+    {
+        get { return state; }
+        set { state = value; }
+    }
+    public void Initialize()
+    {
+        state = "Game Manager initialized...";
+        state.FancyDebug();
+        Debug.Log(state);
+
+        
+        
+        LootStack.Push(new Loot("Sword of Doom", 5));
+        LootStack.Push(new Loot("HP Boost",1));
+        LootStack.Push(new Loot("Golden Key",3));
+        LootStack.Push(new Loot("Pair of Winged Boots", 4));
+        LootStack.Push(new Loot("Mythril Bracer",2));
+
+    }
+
+    public void PrintLootReport()
+    {
+        var currentItem = LootStack.Pop();
+        var nextItem = LootStack.Peek();
+
+        Debug.LogFormat("You got {0}! Youve gota good chance of finding a {1} next", currentItem.name, nextItem.name);
+
+        Debug.LogFormat("There are {0} random loot items waiting for you!", LootStack.Count);
+    }
+
     private void Start()
     {
         itemText.text += itemsCollected;
         healthText.text += playerHP;
-    }
 
+        Initialize();
+
+    }
+    
 
     private int itemsCollected = 0;
     private int playerHP = 10;
@@ -65,6 +103,7 @@ public class GameBehaviour : MonoBehaviour
         }
     }
 
+   
     public void RestartScene()
     {
         Utilities.RestartLevel(0);
@@ -77,5 +116,5 @@ public class GameBehaviour : MonoBehaviour
         Time.timeScale = 0f;
     }
 
-  
+    
 }
