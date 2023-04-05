@@ -5,6 +5,7 @@ using TMPro;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 using CustomExtension;
+using System.Linq;
 
 public class GameBehaviour : MonoBehaviour, IManager
 {
@@ -38,6 +39,8 @@ public class GameBehaviour : MonoBehaviour, IManager
         LootStack.Push(new Loot("Pair of Winged Boots", 4));
         LootStack.Push(new Loot("Mythril Bracer",2));
 
+        FilterLoot();
+
     }
 
     public void PrintLootReport()
@@ -48,6 +51,21 @@ public class GameBehaviour : MonoBehaviour, IManager
         Debug.LogFormat("You got {0}! Youve gota good chance of finding a {1} next", currentItem.name, nextItem.name);
 
         Debug.LogFormat("There are {0} random loot items waiting for you!", LootStack.Count);
+    }
+
+    public void FilterLoot()
+    {
+
+        var rareLoot = LootStack.Where(LootPredicate);
+
+        foreach (var item in rareLoot)
+        {
+            Debug.LogFormat("Rare item: {0}!", item.name);
+        }
+    }
+    public bool LootPredicate(Loot loot)
+    {
+        return loot.rarity >= 3;
     }
 
     private void Start()
