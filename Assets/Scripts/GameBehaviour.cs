@@ -55,18 +55,26 @@ public class GameBehaviour : MonoBehaviour, IManager
 
     public void FilterLoot()
     {
+        var rareLoot = from item in LootStack
+                       where item.rarity >= 3
+                       orderby item.rarity
+                       select item;
 
-        var rareLoot = LootStack.Where(LootPredicate);
+
+        /*var rareLoot = LootStack
+            .Where(item => item.rarity >=3)
+            .OrderBy(item => item.rarity)
+            .Select(item => new
+            {
+                item.name
+            });*/
 
         foreach (var item in rareLoot)
         {
             Debug.LogFormat("Rare item: {0}!", item.name);
         }
     }
-    public bool LootPredicate(Loot loot)
-    {
-        return loot.rarity >= 3;
-    }
+   
 
     private void Start()
     {
