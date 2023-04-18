@@ -4,6 +4,8 @@ using UnityEngine;
 using System.IO;
 using System;
 using System.Xml;
+using System.Xml.Serialization;
+
 
 public class DataManager : MonoBehaviour, IManager      
 {
@@ -26,6 +28,7 @@ public class DataManager : MonoBehaviour, IManager
         textFile = dataPath + "Save_Data.txt";
         streamingTextFile = dataPath + "Steaming_Save_Data.txt";
         xmlLevelProgress = dataPath + "Progress_Data.xml";
+        
 
     }
     private void Start()
@@ -39,8 +42,33 @@ public class DataManager : MonoBehaviour, IManager
 
         FileSystemInfo();
         NewDirectory();
-        WriteToStream(streamingTextFile);
-        ReadFromFile(streamingTextFile);
+        WriteToXML(xmlLevelProgress);
+        ReadFromSteam(xmlLevelProgress);
+    }
+
+
+    public void WriteToXML (string filename)
+    {
+        if (!File.Exists(filename))
+        {
+            FileStream xmlStream = File.Create(filename);
+
+            XmlWriter xmlWriter = XmlWriter.Create(xmlStream);
+
+            xmlWriter.WriteStartDocument();
+
+            xmlWriter.WriteStartElement("level_progress");
+
+            for (int i = 1; i < 5; i++)
+            {
+                xmlWriter.WriteElementString("level", "Level-" + i);
+            }
+
+            xmlWriter.WriteEndElement();
+
+            xmlWriter.Close();
+            xmlStream.Close();
+        }
     }
 
     public void WriteToStream(string filename)
@@ -50,6 +78,8 @@ public class DataManager : MonoBehaviour, IManager
             StreamWriter newStream = File.CreateText(filename);
 
             newStream.WriteLine("<Save Data> for HERO BORN\n");
+            
+            
             newStream.Close();
             Debug.Log("New file created with StreamWriter!");
         }

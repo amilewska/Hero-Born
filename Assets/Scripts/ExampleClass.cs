@@ -4,5 +4,6 @@ using UnityEngine;
 
 public class ExampleClass : MonoBehaviour
 {
-   
+    Weapon huntingBow = new Weapon("Hunting Bow", 105);
+    
 }

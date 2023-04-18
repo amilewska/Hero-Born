@@ -31,13 +31,11 @@ public class GameBehaviour : MonoBehaviour, IManager
         state.FancyDebug();
         Debug.Log(state);
 
-        
-        
-        LootStack.Push(new Loot("Sword of Doom", 5));
-        LootStack.Push(new Loot("HP Boost",1));
-        LootStack.Push(new Loot("Golden Key",3));
-        LootStack.Push(new Loot("Pair of Winged Boots", 4));
-        LootStack.Push(new Loot("Mythril Bracer",2));
+
+        var itemShop = new Shop<string>();
+        var itemShops = new Shop<int>();
+        Debug.Log("Items for sale: " + itemShop.inventory.Count);
+        Debug.Log("Items for sale: " + itemShops.inventory.Count);
 
         FilterLoot();
 
