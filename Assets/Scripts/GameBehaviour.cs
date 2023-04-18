@@ -9,6 +9,79 @@ using System.Linq;
 
 public class GameBehaviour : MonoBehaviour, IManager
 {
+    public PlayerBehaviour playerBehaviour;
+    private int itemsCollected = 0;
+    private int playerHP = 1;
+    public int items
+    {
+        get { return itemsCollected; }
+
+        set
+        {
+            itemsCollected = value;
+            itemText.text = "Items Colected: " + items;
+
+            if (itemsCollected >= maxItems)
+            {
+                UpdateScene("You've found all the items!");
+                winButton.gameObject.SetActive(true);
+
+            }
+            else
+            {
+                progressText.text = "Item found, only " + (maxItems - itemsCollected) + " more!";
+            }
+        }
+
+    }
+
+    public int HP
+    {
+        get { return playerHP; }
+
+        set
+        {
+            playerHP = value;
+            healthText.text = "Player health: " + HP;
+            Debug.LogFormat("Lives: {0}", playerHP);
+
+            if (playerHP <= 0)
+            {
+                UpdateScene("You want another life with that?");
+                lossButton.gameObject.SetActive(true);
+            }
+        }
+    }
+
+    private void OnEnable()
+    {
+        GameObject player = GameObject.Find("Player");
+
+        playerBehaviour = player.GetComponent<PlayerBehaviour>();
+        playerBehaviour.playerJump += HandlePlayerJump;
+        debug("Jump event subscribed");
+    }
+    private void OnDisable()
+    {
+        playerBehaviour.playerJump -= HandlePlayerJump;
+        debug("Jump event unsubscribed");
+    }
+    
+
+    private void HandlePlayerJump()
+    {
+        debug("Player hsa jumped");
+    }
+
+    public delegate void DebugDelegate(string newText);
+
+    public DebugDelegate debug = Prints;
+
+    public static void Prints(string newText)
+    {
+        Debug.Log(newText);
+    }
+
     public Stack<Loot> LootStack = new Stack<Loot>();
 
     public Button lossButton;
@@ -29,16 +102,23 @@ public class GameBehaviour : MonoBehaviour, IManager
     {
         state = "Game Manager initialized...";
         state.FancyDebug();
-        Debug.Log(state);
+        debug(state);
+        LogWithDelegate(debug);
 
+        var itemShop = new Shop<Colectable>();
 
-        var itemShop = new Shop<string>();
-        var itemShops = new Shop<int>();
-        Debug.Log("Items for sale: " + itemShop.inventory.Count);
-        Debug.Log("Items for sale: " + itemShops.inventory.Count);
+        itemShop.AddItem(new Potion());
+        itemShop.AddItem(new Antidote());
 
-        FilterLoot();
+        Debug.Log("Items for sale: " + itemShop.GetStockCount<Potion>());
 
+        //FilterLoot();
+
+    }
+
+    public void LogWithDelegate(DebugDelegate del)
+    {
+        del("Delegating the debug task...");
     }
 
     public void PrintLootReport()
@@ -84,53 +164,25 @@ public class GameBehaviour : MonoBehaviour, IManager
     }
     
 
-    private int itemsCollected = 0;
-    private int playerHP = 10;
-    public int items 
-    { 
-        get { return itemsCollected; } 
-
-        set 
-        { 
-            itemsCollected = value;
-            itemText.text = "Items Colected: " + items;
-
-            if(itemsCollected >= maxItems)
-            {
-                UpdateScene("You've found all the items!");
-                winButton.gameObject.SetActive(true);
-                
-            }
-            else
-            {
-                progressText.text = "Item found, only " + (maxItems - itemsCollected) + " more!";
-            }
-        }
     
-    }
-
-    public int HP
-    {
-        get { return playerHP; }
-
-        set 
-        { 
-            playerHP = value;
-            healthText.text = "Player health: " + HP;
-            Debug.LogFormat("Lives: {0}", playerHP);
-
-            if(playerHP <= 0)
-            {
-                UpdateScene("You want another life with that?");
-                lossButton.gameObject.SetActive(true);
-            }
-        }
-    }
 
    
     public void RestartScene()
     {
-        Utilities.RestartLevel(0);
+        try
+        {
+            Utilities.RestartLevel(-1);
+        }
+
+        catch (System.ArgumentException exception)
+        {
+            Utilities.RestartLevel(0);
+            debug("reverting to scene 0: " + exception.ToString());
+        }
+        finally
+        {
+            debug("Level restart has completed");
+        }
             
     }
 

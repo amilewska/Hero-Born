@@ -16,12 +16,23 @@ public static class Utilities
     }
     public static void RestartLevel()
     {
+        
+
+
         SceneManager.LoadScene(0);
         Time.timeScale = 1;
     }
 
     public static bool RestartLevel(int sceneIndex)
     {
+        
+
+        if (sceneIndex < 0) 
+        {
+            throw new System.ArgumentException("Scene index cannot be negative");
+            
+        }
+
         Debug.Log("Player deaths: " + playerDeaths);
         string massage = UpdateDeathCount(ref playerDeaths);
         Debug.Log("Player deaths: " + playerDeaths);
@@ -31,4 +42,5 @@ public static class Utilities
         Time.timeScale = 1;
         return true;
     }
+
 }

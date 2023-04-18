@@ -4,6 +4,9 @@ using UnityEngine;
 
 public class PlayerBehaviour : MonoBehaviour
 {
+    public delegate void JumpingEvent();
+    public event JumpingEvent playerJump;
+
     [SerializeField] private GameObject bulletPrefab;
     [SerializeField] private float bulletSpeed = 100f;
     private bool isShooting;
@@ -60,6 +63,8 @@ public class PlayerBehaviour : MonoBehaviour
         if (IsGrounded() && isJumping)
         {
             rb.AddForce(Vector3.up * jumpVelocity, ForceMode.Impulse);
+
+            playerJump();
         }
 
         isJumping = false;

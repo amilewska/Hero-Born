@@ -2215,6 +2215,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e8fd7f183eda4d748b6c8cf4553492fb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  playerBehaviour: {fileID: 0}
   lossButton: {fileID: 496983078}
   winButton: {fileID: 1095732457}
   healthText: {fileID: 1830333665}
@@ -2242,7 +2243,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1383656366}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 942e7b1829609e641b9f1f454b7e0c19, type: 3}
   m_Name: 
